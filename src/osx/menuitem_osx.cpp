@@ -160,6 +160,16 @@ void wxMenuItem::Check(bool bDoCheck)
 
 void wxMenuItem::SetItemLabel(const wxString& text)
 {
+    // sensible, apple-like labels for these stock ids are set
+    // by CreateAppleMenu() -- prevent overriding those by
+    // generic stock labels or custom values.
+    if (GetId() == wxID_ABOUT ||
+        GetId() == wxID_PREFERENCES ||
+        GetId() == wxID_EXIT)
+    {
+        return;
+    }
+
     // don't do anything if label didn't change
     if ( m_text == text )
         return;
