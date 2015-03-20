@@ -149,7 +149,7 @@ struct PreviousLogInfo
     wxLogRecordInfo info;
 
     // the number of times it was already repeated
-    unsigned numRepeated;
+    unsigned long numRepeated;
 };
 
 PreviousLogInfo gs_prevLog;
