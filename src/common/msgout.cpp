@@ -147,8 +147,9 @@ wxString wxMessageOutputStderr::AppendLineFeedIfNeeded(const wxString& str)
 
 void wxMessageOutputStderr::Output(const wxString& str)
 {
+	const wxMBConv *conv = (m_conv ? m_conv : &wxConvLibc);
     const wxString strWithLF = AppendLineFeedIfNeeded(str);
-    const wxWX2MBbuf buf = strWithLF.mb_str();
+    const wxWX2MBbuf buf = strWithLF.mb_str(*conv);
 
     if ( buf )
         fprintf(m_fp, "%s", (const char*) buf);

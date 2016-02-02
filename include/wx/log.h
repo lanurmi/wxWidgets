@@ -730,12 +730,14 @@ class WXDLLIMPEXP_BASE wxLogStderr : public wxLog
 public:
     // redirect log output to a FILE
     wxLogStderr(FILE *fp = NULL);
+	wxLogStderr(FILE *fp, const wxMBConv *);
 
 protected:
     // implement sink function
     virtual void DoLogText(const wxString& msg);
 
     FILE *m_fp;
+	const wxMBConv *m_conv;
 
     wxDECLARE_NO_COPY_CLASS(wxLogStderr);
 };
