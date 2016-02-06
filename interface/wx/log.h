@@ -784,6 +784,12 @@ public:
         @c FILE. If it is @NULL, the messages are sent to @c stderr.
     */
     wxLogStderr(FILE* fp = NULL);
+    /**
+        Constructs a log target which sends all the log messages to the given
+        @c FILE, using the given encoding.
+		If it is @NULL, the messages are sent to @c stderr.
+    */
+    wxLogStderr(wxLogFileEncoding e, FILE *fp = NULL);
 };
 
 

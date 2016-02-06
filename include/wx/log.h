@@ -721,12 +721,14 @@ class WXDLLIMPEXP_BASE wxLogStderr : public wxLog
 public:
     // redirect log output to a FILE
     wxLogStderr(FILE *fp = NULL);
+    wxLogStderr(wxLogFileEncoding e, FILE *fp = NULL);
 
 protected:
     // implement sink function
     virtual void DoLogText(const wxString& msg) wxOVERRIDE;
 
     FILE *m_fp;
+	wxLogFileEncoding m_enc;
 
     wxDECLARE_NO_COPY_CLASS(wxLogStderr);
 };
@@ -739,6 +741,7 @@ class WXDLLIMPEXP_BASE wxLogStream : public wxLog
 public:
     // redirect log output to an ostream
     wxLogStream(wxSTD ostream *ostr = (wxSTD ostream *) NULL);
+    wxLogStream(wxLogFileEncoding e, wxSTD ostream *ostr = (wxSTD ostream *) NULL);
 
 protected:
     // implement sink function
@@ -746,6 +749,7 @@ protected:
 
     // using ptr here to avoid including <iostream.h> from this file
     wxSTD ostream *m_ostr;
+	wxLogFileEncoding m_enc;
 };
 
 #endif // wxUSE_STD_IOSTREAM

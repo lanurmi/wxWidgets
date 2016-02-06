@@ -64,7 +64,8 @@ private:
 class WXDLLIMPEXP_BASE wxMessageOutputStderr : public wxMessageOutput
 {
 public:
-    wxMessageOutputStderr(FILE *fp = stderr) : m_fp(fp) { }
+    wxMessageOutputStderr(FILE *fp = stderr) : m_fp(fp), m_enc(wxLFE_Local) { }
+    wxMessageOutputStderr(wxLogFileEncoding e, FILE *fp = stderr) : m_fp(fp), m_enc(e) { }
 
     virtual void Output(const wxString& str) wxOVERRIDE;
 
@@ -74,6 +75,7 @@ protected:
     wxString AppendLineFeedIfNeeded(const wxString& str);
 
     FILE *m_fp;
+	wxLogFileEncoding m_enc;
 };
 
 // ----------------------------------------------------------------------------

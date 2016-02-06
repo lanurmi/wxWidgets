@@ -837,7 +837,17 @@ void wxLogBuffer::DoLogTextAtLevel(wxLogLevel level, const wxString& msg)
 // wxLogStderr class implementation
 // ----------------------------------------------------------------------------
 
-wxLogStderr::wxLogStderr(FILE *fp)
+wxLogStderr::wxLogStderr(FILE *fp):
+    m_enc(wxLFE_Local)
+{
+    if ( fp == NULL )
+        m_fp = stderr;
+    else
+        m_fp = fp;
+}
+
+wxLogStderr::wxLogStderr(wxLogFileEncoding e, FILE *fp):
+    m_enc(e)
 {
     if ( fp == NULL )
         m_fp = stderr;
@@ -850,7 +860,7 @@ void wxLogStderr::DoLogText(const wxString& msg)
     // First send it to stderr, even if we don't have it (e.g. in a Windows GUI
     // application under) it's not a problem to try to use it and it's easier
     // than determining whether we do have it or not.
-    wxMessageOutputStderr(m_fp).Output(msg);
+    wxMessageOutputStderr(m_enc, m_fp).Output(msg);
 
     // under GUI systems such as Windows or Mac, programs usually don't have
     // stderr at all, so show the messages also somewhere else, typically in
@@ -872,7 +882,17 @@ void wxLogStderr::DoLogText(const wxString& msg)
 
 #if wxUSE_STD_IOSTREAM
 #include "wx/ioswrap.h"
-wxLogStream::wxLogStream(wxSTD ostream *ostr)
+wxLogStream::wxLogStream(wxSTD ostream *ostr):
+    m_enc(wxLFE_Local)
+{
+    if ( ostr == NULL )
+        m_ostr = &wxSTD cerr;
+    else
+        m_ostr = ostr;
+}
+
+wxLogStream::wxLogStream(wxLogFileEncoding e, wxSTD ostream *ostr):
+    m_enc(e)
 {
     if ( ostr == NULL )
         m_ostr = &wxSTD cerr;
@@ -882,7 +902,8 @@ wxLogStream::wxLogStream(wxSTD ostream *ostr)
 
 void wxLogStream::DoLogText(const wxString& msg)
 {
-    const wxSTD string msgStdStr = msg.ToStdString();
+	// this std::string may contain UTF-8
+	const wxSTD string msgStdStr = (m_enc == wxLFE_UTF8 ? wxSTD string(msg.mb_str(wxConvUTF8)) : msg.ToStdString());
     if ( !msgStdStr.empty() )
         (*m_ostr) << msgStdStr << wxSTD endl;
     else // charset conversion probably has failed; log at least something
