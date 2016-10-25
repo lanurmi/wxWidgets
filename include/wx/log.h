@@ -1188,6 +1188,10 @@ WXDLLIMPEXP_BASE unsigned long wxSysErrorCode();
 // return the error message for given (or last if 0) error code
 WXDLLIMPEXP_BASE const wxChar* wxSysErrorMsg(unsigned long nErrCode = 0);
 
+// return the error message for given (or last if 0) error code
+// copy the message to szBuf provided by the calller
+WXDLLIMPEXP_BASE const wxChar* wxSysErrorMsg(wxChar* szBuf, size_t len, unsigned long nErrCode = 0);
+
 // ----------------------------------------------------------------------------
 // define wxLog<level>() functions which can be used by application instead of
 // stdio, iostream &c for log messages for easy redirection

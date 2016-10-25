@@ -1232,6 +1232,20 @@ unsigned long wxSysErrorCode();
 */
 const wxChar* wxSysErrorMsg(unsigned long errCode = 0);
 
+/**
+    Returns the error message corresponding to the given system error code. If
+    @a errCode is 0 (default), the last error code (as returned by
+    wxSysErrorCode()) is used.
+
+    This overload copies the error message to the @a szBuf, of length @a len
+    characters, provided by the caller.
+
+    @see wxSysErrorCode(), wxLogSysError()
+
+    @header{wx/log.h}
+*/
+const wxChar* wxSysErrorMsg(wxChar* szBuf, size_t len, unsigned long nErrCode = 0);
+
 //@}
 
 /** @addtogroup group_funcmacro_log */

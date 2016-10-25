@@ -1058,12 +1058,16 @@ unsigned long wxSysErrorCode()
 // get error message from system
 const wxChar *wxSysErrorMsg(unsigned long nErrCode)
 {
+    static wxChar s_szBuf[1024];
+    return wxSysErrorMsg(s_szBuf, WXSIZEOF(s_szBuf), nErrCode);
+}
+
+const wxChar* wxSysErrorMsg(wxChar* szBuf, size_t len, unsigned long nErrCode)
+{
     if ( nErrCode == 0 )
         nErrCode = wxSysErrorCode();
 
 #if defined(__WINDOWS__)
-    static wxChar s_szBuf[1024];
-
     // get error message from system
     LPVOID lpMsgBuf;
     if ( ::FormatMessage
@@ -1079,8 +1083,8 @@ const wxChar *wxSysErrorMsg(unsigned long nErrCode)
     {
         // if this happens, something is seriously wrong, so don't use _() here
         // for safety
-        wxSprintf(s_szBuf, wxS("unknown error %lx"), nErrCode);
-        return s_szBuf;
+        wxSprintf(szBuf, wxS("unknown error %lx"), nErrCode);
+        return szBuf;
     }
 
 
@@ -1088,33 +1092,40 @@ const wxChar *wxSysErrorMsg(unsigned long nErrCode)
     // Crashes on SmartPhone (FIXME)
     if( lpMsgBuf != 0 )
     {
-        wxStrlcpy(s_szBuf, (const wxChar *)lpMsgBuf, WXSIZEOF(s_szBuf));
+        wxStrlcpy(szBuf, (const wxChar *)lpMsgBuf, len);
 
         LocalFree(lpMsgBuf);
 
         // returned string is ended with '\r\n' - bad
-        size_t len = wxStrlen(s_szBuf);
+        size_t len = wxStrlen(szBuf);
         if ( len >= 2 ) {
             // truncate string
-            if ( s_szBuf[len - 2] == wxS('\r') )
-                s_szBuf[len - 2] = wxS('\0');
+            if ( szBuf[len - 2] == wxS('\r') )
+                szBuf[len - 2] = wxS('\0');
         }
     }
     else
     {
-        s_szBuf[0] = wxS('\0');
+        szBuf[0] = wxS('\0');
     }
 
-    return s_szBuf;
+    return szBuf;
 #else // !__WINDOWS__
+        char buffer[1024] = { '\0' };
+        char *error = buffer;
+
+#ifdef _GNU_SOURCE // GNU-specific strerror_r
+        error = strerror_r((int)nErrCode, error, sizeof(error));
+#else // XSI-compliant strerror_r
+        strerror_r((int)nErrCode, buffer, sizeof(buffer));
+#endif
+
     #if wxUSE_UNICODE
-        static wchar_t s_wzBuf[1024];
-        wxConvCurrent->MB2WC(s_wzBuf, strerror((int)nErrCode),
-                             WXSIZEOF(s_wzBuf) - 1);
-        return s_wzBuf;
+        wxConvCurrent->MB2WC(szBuf, error, len - 1);
     #else
-        return strerror((int)nErrCode);
+        strncpy(szBuf, buffer, sizeof(buffer) - 1);
     #endif
+        return szBuf;
 #endif  // __WINDOWS__/!__WINDOWS__
 }
 
