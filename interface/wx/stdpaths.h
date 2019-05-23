@@ -219,10 +219,13 @@ public:
         If the application-specific directory doesn't exist, this function
         returns GetDocumentsDir().
 
+	@note If used in a Windows service, the return value may be empty.
+
         Example return values:
         - Unix: @c ~/appinfo
         - Windows: @c "C:\Users\username\Documents\appinfo" or
-                   @c "C:\Documents and Settings\username\My Documents\appinfo"
+                   @c "C:\Documents and Settings\username\My Documents\appinfo" or
+                   empty
         - Mac: @c ~/Documents/appinfo
 
         @since 2.9.0
