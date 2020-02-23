@@ -273,6 +273,7 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(DIALOGS_STANDARD_BUTTON_SIZER_DIALOG,  MyFrame::OnStandardButtonsSizerDialog)
     EVT_MENU(DIALOGS_TEST_DEFAULT_ACTION,           MyFrame::OnTestDefaultActionDialog)
     EVT_MENU(DIALOGS_MODAL_HOOK,                    MyFrame::OnModalHook)
+    EVT_MENU(DIALOGS_SIMULATE_UNSAVED,              MyFrame::OnSimulatedUnsaved)
 
     EVT_MENU(DIALOGS_REQUEST,                       MyFrame::OnRequestUserAttention)
 #if wxUSE_NOTIFICATION_MESSAGE
@@ -284,6 +285,7 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 #endif // wxUSE_RICHTOOLTIP
 
     EVT_MENU(wxID_EXIT,                             MyFrame::OnExit)
+    EVT_CLOSE(                                      MyFrame::OnClose)
 wxEND_EVENT_TABLE()
 
 #if USE_MODAL_PRESENTATION
@@ -596,6 +598,7 @@ bool MyApp::OnInit()
     menuDlg->Append(DIALOGS_STANDARD_BUTTON_SIZER_DIALOG, "&Standard Buttons Sizer Dialog");
     menuDlg->Append(DIALOGS_TEST_DEFAULT_ACTION, "&Test dialog default action");
     menuDlg->AppendCheckItem(DIALOGS_MODAL_HOOK, "Enable modal dialog hook");
+    menuDlg->AppendCheckItem(DIALOGS_SIMULATE_UNSAVED, "Simulate unsaved documents at exit");
 
     menuDlg->AppendSeparator();
     menuDlg->Append(wxID_EXIT, "E&xit\tAlt-X");
@@ -639,7 +642,7 @@ bool MyApp::OnInit()
 
 // My frame constructor
 MyFrame::MyFrame(const wxString& title)
-       : wxFrame(NULL, wxID_ANY, title)
+       : wxFrame(NULL, wxID_ANY, title), m_confirmExit(false)
 {
     SetIcon(wxICON(sample));
 
@@ -2730,9 +2733,34 @@ void MyFrame::OnModalHook(wxCommandEvent& event)
         s_hook.Unregister();
 }
 
+void MyFrame::OnSimulatedUnsaved(wxCommandEvent& event)
+{
+    m_confirmExit = event.IsChecked();
+}
+
 void MyFrame::OnExit(wxCommandEvent& WXUNUSED(event) )
 {
     Close(true);
+}
+
+void MyFrame::OnClose(wxCloseEvent& event )
+{
+	if ( m_confirmExit ) {
+		switch ( wxMessageBox("You have unsaved files, lol?", __FUNCTION__, wxYES_NO | wxCANCEL) ) {
+		case wxCANCEL:
+			if (event.CanVeto())
+				event.Veto();
+			return; // Return without calling event.Skip()
+		case wxYES:
+			// Do something to save the file(s)
+			break;
+		case wxNO:
+		default:
+			// Discard changes
+			break;
+		}
+	}
+	event.Skip();
 }
 
 #if wxUSE_PROGRESSDLG

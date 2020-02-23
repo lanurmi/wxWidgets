@@ -503,8 +503,10 @@ public:
 
     void OnTestDefaultActionDialog(wxCommandEvent& event);
     void OnModalHook(wxCommandEvent& event);
+    void OnSimulatedUnsaved(wxCommandEvent& event);
 
     void OnExit(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
 
 private:
 #if wxUSE_COLOURDLG
@@ -543,6 +545,7 @@ private:
     SettingsData m_settingsData;
 #endif // USE_SETTINGS_DIALOG
 
+    bool m_confirmExit;
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -627,7 +630,8 @@ enum
     DIALOGS_PROPERTY_SHEET_BUTTONTOOLBOOK,
     DIALOGS_STANDARD_BUTTON_SIZER_DIALOG,
     DIALOGS_TEST_DEFAULT_ACTION,
-    DIALOGS_MODAL_HOOK
+    DIALOGS_MODAL_HOOK,
+    DIALOGS_SIMULATE_UNSAVED
 };
 
 #endif
