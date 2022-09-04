@@ -234,7 +234,7 @@ The problems can be separated into three broad classes:
 Because of the need to support implicit conversions to both @c char and
 @c wchar_t, wxString implementation is rather involved and many of its operators
 don't return the types which they could be naively expected to return.
-For example, the @c operator[] doesn't return neither a @c char nor a @c wchar_t
+For example, the @c operator[] returns neither a @c char nor a @c wchar_t
 but an object of a helper class wxUniChar or wxUniCharRef which is implicitly
 convertible to either. Usually you don't need to worry about this as the
 conversions do their work behind the scenes however in some cases it doesn't
