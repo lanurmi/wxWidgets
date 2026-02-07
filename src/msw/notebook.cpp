@@ -39,9 +39,7 @@
 
 #include "wx/msw/private/darkmode.h"
 
-#if wxUSE_UXTHEME
-    #include "wx/msw/uxtheme.h"
-#endif
+#include "wx/msw/uxtheme.h"
 
 // ----------------------------------------------------------------------------
 // macros
@@ -1714,11 +1712,7 @@ bool wxNotebook::SetBackgroundColour(const wxColour& colour)
 
 #if USE_NOTEBOOK_ANTIFLICKER
     Unbind(wxEVT_ERASE_BACKGROUND, &wxNotebook::OnEraseBackground, this);
-    if ( m_hasBgCol
-#if wxUSE_UXTHEME
-        || !wxUxThemeIsActive()
-#endif // wxUSE_UXTHEME
-        )
+    if ( m_hasBgCol || !wxUxThemeIsActive() )
     {
         Bind(wxEVT_ERASE_BACKGROUND, &wxNotebook::OnEraseBackground, this);
     }
