@@ -1714,7 +1714,11 @@ bool wxNotebook::SetBackgroundColour(const wxColour& colour)
 
 #if USE_NOTEBOOK_ANTIFLICKER
     Unbind(wxEVT_ERASE_BACKGROUND, &wxNotebook::OnEraseBackground, this);
-    if ( m_hasBgCol || !wxUxThemeIsActive() )
+    if ( m_hasBgCol
+#if wxUSE_UXTHEME
+        || !wxUxThemeIsActive()
+#endif // wxUSE_UXTHEME
+        )
     {
         Bind(wxEVT_ERASE_BACKGROUND, &wxNotebook::OnEraseBackground, this);
     }

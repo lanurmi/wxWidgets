@@ -200,6 +200,7 @@ wxChoice::GetClassDefaultAttributes(wxWindowVariant WXUNUSED(variant))
         // Theme colour would be light, so don't use it.
         attrs.colBg = wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX);
     }
+#if wxUSE_UXTHEME
     else
     {
         // NB: use EDIT, not COMBOBOX (the latter works in XP but not Vista)
@@ -208,6 +209,7 @@ wxChoice::GetClassDefaultAttributes(wxWindowVariant WXUNUSED(variant))
         if ( !attrs.colBg.IsOk() )
             attrs.colBg = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
     }
+#endif
 
     return attrs;
 }

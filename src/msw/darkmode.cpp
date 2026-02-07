@@ -452,6 +452,7 @@ void AllowForWindow(HWND hwnd, const wchar_t* themeName, const wchar_t* themeId)
     if ( wxMSWImpl::AllowDarkModeForWindow(hwnd, true) )
         wxLogTrace(TRACE_DARKMODE, "Allow dark mode for %p failed", hwnd);
 
+#if wxUSE_UXTHEME
     if ( themeName || themeId )
     {
         HRESULT hr = ::SetWindowTheme(hwnd, themeName, themeId);
@@ -461,6 +462,10 @@ void AllowForWindow(HWND hwnd, const wchar_t* themeName, const wchar_t* themeId)
                                            hwnd, themeName, themeId), hr);
         }
     }
+#else
+    wxUnusedVar(themeName);
+    wxUnusedVar(themeId);
+#endif
 }
 
 wxColour GetColour(wxSystemColour index)
@@ -633,6 +638,7 @@ HandleMenuMessage(WXLRESULT* result,
             }
             return true;
 
+#if wxUSE_UXTHEME
         case WM_MENUBAR_DRAWMENUITEM:
             if ( auto* const drawMenuItem = (MenuBarDrawMenuItem*)lParam )
             {
@@ -712,6 +718,7 @@ HandleMenuMessage(WXLRESULT* result,
                                   buf, mii.cch, drawTextFlags, rcItem,
                                   &textOpts);
             }
+#endif
             return true;
     }
 
