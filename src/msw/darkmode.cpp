@@ -718,8 +718,8 @@ HandleMenuMessage(WXLRESULT* result,
                                   buf, mii.cch, drawTextFlags, rcItem,
                                   &textOpts);
             }
-#endif
             return true;
+#endif
     }
 
     return false;
