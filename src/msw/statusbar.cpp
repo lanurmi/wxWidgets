@@ -696,6 +696,7 @@ wxStatusBar::GetClassDefaultAttributes(wxWindowVariant variant)
     wxVisualAttributes attrs =
         wxStatusBarBase::GetClassDefaultAttributes(variant);
 
+#if wxUSE_UXTHEME
     if ( wxMSWDarkMode::IsActive() )
     {
         // It looks like we don't have to use a valid HWND here.
@@ -709,6 +710,7 @@ wxStatusBar::GetClassDefaultAttributes(wxWindowVariant variant)
         if ( col.IsOk() )
             attrs.colBg = col;
     }
+#endif
 
     return attrs;
 }

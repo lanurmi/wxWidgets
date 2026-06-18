@@ -151,9 +151,4 @@ wxUxThemeHandle::DrawBackground(HDC hdc, const wxRect& rect, int part, int state
     DrawBackground(hdc, rc, part, state);
 }
 
-#else
-bool wxUxThemeIsActive()
-{
-    return false;
-}
 #endif // wxUSE_UXTHEME

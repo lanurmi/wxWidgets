@@ -78,9 +78,11 @@ public:
     // need to be called any more.
     void UseHeaderThemeColors(HWND hwndHdr)
     {
+#if wxUSE_UXTHEME
         auto theme = wxUxThemeHandle::NewAtStdDPI(hwndHdr, L"Header");
 
         m_attr.SetTextColour(theme.GetColour(HP_HEADERITEM, TMT_TEXTCOLOR));
+#endif
 
         // Note that TMT_FILLCOLOR doesn't seem to exist in this theme but the
         // correct background colour is already used in "ItemsView" theme by

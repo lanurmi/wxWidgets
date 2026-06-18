@@ -631,6 +631,7 @@ wxVisualAttributes wxListCtrl::GetDefaultAttributes() const
 {
     wxVisualAttributes attrs = GetClassDefaultAttributes(GetWindowVariant());
 
+#if wxUSE_UXTHEME
     if ( wxMSWDarkMode::IsActive() )
     {
         // Note that we intentionally do not use this window HWND for the
@@ -646,6 +647,7 @@ wxVisualAttributes wxListCtrl::GetDefaultAttributes() const
         if ( col.IsOk() )
             attrs.colBg = col;
     }
+#endif
 
     return attrs;
 }
